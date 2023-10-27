@@ -7,13 +7,16 @@ app = Flask(__name__)
 
 app.register_blueprint(app_views)
 
+
 @app.teardown_appcontext
 def app_teardown(self):
+    """ method to close storage """
     storage.close()
 
 
 @app.errorhandler(404)
 def not_found(error):
+    """ returns 404 error in json """
     return make_response(jsonify({'error': 'not found'}), 404)
 
 
