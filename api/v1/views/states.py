@@ -59,7 +59,7 @@ def get_all_state(state_id=None):
             if js is None:
                 return 'Not a JSON', 400
             for key, value in js.items():
-                if key != "id" or key != 'created_at' or key != 'updated_at':
+                if key != "id" and key != 'created_at' and key != 'updated_at':
                     setattr(data, key, value)
             storage.save()
             return jsonify(data.to_dict()), 200
