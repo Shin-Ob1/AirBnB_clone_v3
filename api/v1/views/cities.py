@@ -1,4 +1,7 @@
 #!/usr/bin/python3
+
+""" This module contains functions for cities"""
+
 from flask import jsonify, abort
 from api.v1.views import app_views
 from models import storage
