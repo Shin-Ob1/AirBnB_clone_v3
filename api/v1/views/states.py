@@ -42,10 +42,12 @@ def get_all_state(state_id=None):
             return jsonify({}), 200
     elif request.method == 'POST' and state_id is None:
         data = request.get_json()
+
         if data is None:
             return 'Not a JSON', 400
-        elif data.get('name') is None:
+        elif 'name' not in data:
             return 'Missing name', 400
+
         obj = State(**data)
         storage.new(obj)
         storage.save()
@@ -59,8 +61,7 @@ def get_all_state(state_id=None):
             if js is None:
                 return 'Not a JSON', 400
             for key, value in js.items():
-                if key != "id" and key != 'created_at' and key != 'updated_at':
-                    if hasattr(data, key):
-                        setattr(data, key, value)
+                if key not in ['id', 'created_at', 'updated_at']:
+                    setattr(data, key, value)
             storage.save()
             return jsonify(data.to_dict()), 200
