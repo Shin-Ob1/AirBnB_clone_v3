@@ -1,6 +1,8 @@
 #!/usr/bin/python3
 
-"""This module contains the route for our api"""
+"""This module contains the route for our api
+"""
+
 from api.v1.views import app_views
 from flask import Flask, jsonify
 from models.amenity import Amenity

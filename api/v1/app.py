@@ -1,3 +1,7 @@
+#!/usr/bin/python3
+""" This module covers all the functionalities of out app
+"""
+
 from flask import Flask, make_response, jsonify
 from models import storage
 from api.v1.views import app_views
