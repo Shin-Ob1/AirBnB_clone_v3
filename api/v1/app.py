@@ -21,7 +21,7 @@ def app_teardown(self):
 @app.errorhandler(404)
 def not_found(error):
     """ returns 404 error in json """
-    return make_response(jsonify({"error": "not found"}), 404)
+    return make_response(jsonify({"error": "Not found"}), 404)
 
 
 if __name__ == '__main__':
