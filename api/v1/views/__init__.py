@@ -13,7 +13,7 @@ from api.v1.views.states import *
 # Import amenity views here
 
 # Import city views here
-
+from api.v1.views.cities import *
 # Import place views here
 
 # Import review views here
