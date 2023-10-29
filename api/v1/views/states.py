@@ -39,6 +39,7 @@ def get_all_state(state_id=None):
             abort(404)
         else:
             storage.delete(data)
+            storage.save()
             return jsonify({}), 200
     elif request.method == 'POST' and state_id is None:
         data = request.get_json()
