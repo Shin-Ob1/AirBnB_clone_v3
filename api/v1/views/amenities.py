@@ -47,7 +47,7 @@ def get_amenity(amenity_id=None):
         storage.new(obj)
         storage.save()
         return jsonify(obj.to_dict()), 201
-    elif request.method == 'PUT' and Amenity_id is not None:
+    elif request.method == 'PUT' and amenity_id is not None:
         data = storage.get(Amenity, amenity_id)
         if data is None:
             abort(404)
