@@ -31,7 +31,7 @@ def get_city_place(city_id=None):
             data = storage.get(City, city_id)
             if data is None:
                 abort(404)
-            request_data = request.get_json()
+            request_data = request.get_json(silent=True)
             if request_data is None:
                 return 'Not a JSON', 400
             if 'user_id' not in request_data:
@@ -76,7 +76,7 @@ def get_places(place_id=None):
         if data is None:
             abort(404)
         else:
-            js = request.get_json()
+            js = request.get_json(silent=True)
             if js is None:
                 return 'Not a JSON', 400
             for key, value in js.items():
