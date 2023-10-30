@@ -25,7 +25,7 @@ def state_cities(state_id):
                  strict_slashes=False)
 def get_city(city_id):
     """ retrieves a city object """
-    city = stprage.get('City', city_id)
+    city = storage.get('City', city_id)
     if city is None:
         abort(404)
     return jsonify(city.to_dict())
