@@ -33,7 +33,7 @@ def get_review(review_id):
     return jsonify(review.to_dict())
 
 
-@app_vies.route('/reviews/<string:review_id>', methods=['DELETE'],
+@app_views.route('/reviews/<string:review_id>', methods=['DELETE'],
                  strict_slashes=False)
 def delete_review(review_id):
     """ Deletes a review """
