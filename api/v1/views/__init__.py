@@ -19,4 +19,4 @@ from api.v1.views.places import *
 # Import review views here
 from api.v1.views.places_reviews import *
 # Import place_amenities
-from appi.v1.views.places_amenities import *
+from api.v1.views.places_amenities import *
