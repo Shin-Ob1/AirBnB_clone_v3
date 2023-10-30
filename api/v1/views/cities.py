@@ -20,3 +20,12 @@ def state_cities(state_id):
     for ct in state.cities:
         ct_list.append(ct.to_dict())
     return jsonify(ct_list)
+
+@app_views.route('/cities/<string:city_id>', methods=['GET'],
+                 strict_slashes=False)
+def get_city(city_id):
+    """ retrieves a city object """
+    city = stprage.get('City', city_id)
+    if city is None:
+        abort(404)
+    return jsonify(city.to_dict())
