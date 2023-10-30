@@ -48,7 +48,8 @@ def get_city_place(city_id=None):
             return jsonify(new_dict), 201
 
 
-@app_views.route('/places/<string:place_id>/', methods=['GET', 'DELETE', 'PUT'])
+@app_views.route('/places/<string:place_id>/',
+                 methods=['GET', 'DELETE', 'PUT'])
 def get_places(place_id=None):
     """Get a list of place dictionary """
     new_dict = []
