@@ -55,7 +55,7 @@ def create_user():
     return jsonify(new_user.to_dict()), 201
 
 
-@app_views.route('/users/<string:user_id>', methods=['put'],
+@app_views.route('/users/<string:user_id>', methods=['PUT'],
                  strict_slashes=False)
 def update_user(user_id):
     """ Updates a User info """
@@ -65,7 +65,7 @@ def update_user(user_id):
     body = request.get_json(silent=True)
     if body is None:
         abort(404, description="Not a JSON")
-    ignore = ['id', 'state_id', 'created_at', 'updated_at']
+    ignore = ['id', 'email', 'created_at', 'updated_at']
     for key, value in body.items():
         if key not in ignore:
             setattr(user, key, value)
