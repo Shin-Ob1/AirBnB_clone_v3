@@ -50,24 +50,39 @@ def delete_review(review_id):
                  strict_slashes=False)
 def create_review(place_id):
     """ Creates a new review """
-    body = request.get_json()
-    if not body:
-        abort(400, "Not a JSON")
-    user_id = body.get('user_id')
-    if not user_id:
-        abort(400, "Missing user_id")
-    text = body.get('text')
-    if not text:
-        abort(400, "Missing text")
-    user = storage.get("User", user_id)
-    if user is None:
-        abort(404)
-    place = storage.get("Place", place_id)
+    place = storage.get(Place, place_id)
     if place is None:
         abort(404)
-    new_rev = Review(**post_content)
-    new_rev.place_id = place_id
-    storage.new(new_rev)
-    new_rev.save()
-    storage.close()
-    return jsonify(new_rev.to_dict()), 201
+    body = request.get_json(silent=True)
+    if body is None:
+        abort(404, description="Not a JSON")
+    if user_id not in body:
+        abort(404, description="Missing user_id")
+    text = body.get('text')
+    if text is None:
+        abort(404, "Missing text")
+    user = storage.get(User, body['user_id'])
+    if user is None:
+        abort(404)
+    body['place_id'] = place_id
+    rev = Review(**body)
+    rev.save()
+    return jsonify(rev.to_dict()), 201
+
+
+@app_views.route('/reviews/<string:review_id>', methods=['PUT'],
+                 strict_slashes=False)
+def update_review(review_id):
+    """ Updates a review """
+    review = storage.get(Review, review_id)
+    if not review:
+        abort(404)
+    body = request.get_json(silent=True)
+    if body is None:
+        abort(400, description="Not a JSON")
+    ignore = ['id', 'user_id', 'place_id', 'created_at', 'updated_at']
+    for key, value in body.items():
+        if key not in ignore:
+            setattr(review, key, value)
+    storage.save()
+    return jsonify(review.to_dict()), 200
