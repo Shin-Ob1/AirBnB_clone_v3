@@ -51,20 +51,26 @@ def delete_review(review_id):
 def create_review(place_id):
     """ Creates a new review """
     place = storage.get(Place, place_id)
-    if place is None:
+
+    if not place:
         abort(404)
-    body = request.get_json(silent=True)
-    if body is None:
-        abort(404, description="Not a JSON")
-    if user_id not in body:
-        abort(404, description="Missing user_id")
-    text = body.get('text')
-    if text is None:
-        abort(404, "Missing text")
-    user = storage.get(User, body['user_id'])
-    if user is None:
+
+    if not request.get_json():
+        abort(400, description="Not a JSON")
+
+    if 'user_id' not in request.get_json():
+        abort(400, description="Missing user_id")
+
+    data = request.get_json()
+    user = storage.get(User, data['user_id'])
+
+    if not user:
         abort(404)
-    body['place_id'] = place_id
-    rev = Review(**body)
-    rev.save()
-    return jsonify(rev.to_dict()), 201
+
+    if 'text' not in request.get_json():
+        abort(400, description="Missing text")
+
+    data['place_id'] = place_id
+    instance = Review(**data)
+    instance.save()
+    return make_response(jsonify(instance.to_dict()), 201)
