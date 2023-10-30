@@ -13,7 +13,7 @@ from models.city import City
                  strict_slashes=False)
 def state_cities(state_id):
     """ Retrieves the list of cities of a state id  """
-    state = storage.get('State', state_id)
+    state = storage.get(State, state_id)
     if state is None:
         abort(404)
     ct_list = []
@@ -26,7 +26,19 @@ def state_cities(state_id):
                  strict_slashes=False)
 def get_city(city_id):
     """ retrieves a city object """
-    city = storage.get('City', city_id)
+    city = storage.get(City, city_id)
     if city is None:
         abort(404)
     return jsonify(city.to_dict())
+
+
+@app_views.route('/cities/<string:city_id>', methods=['DELETE'],
+                 strict_slashes=False)
+def del_city(city_id):
+    """ Deletes a city object """
+    city = storage.get(City, city_id)
+    if city is None:
+        abort(404)
+    storage.delete(city)
+    storage.save()
+    return jsonify({}), 200
