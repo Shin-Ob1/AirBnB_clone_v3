@@ -25,7 +25,7 @@ def get_reviews(place_id):
 
 @app_views.route('/reviews/<string:review_id>', methods=['GET'],
                  strict_slashes=False)
-def get review(review_id):
+def get_review(review_id):
     """ Retrieves a review """
     review = storage.get(Review, review_id)
     if review is None:
