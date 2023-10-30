@@ -11,7 +11,7 @@ from api.v1.views.states import *
 # Import user views here
 
 # Import amenity views here
-
+from api.v1.views.amenities import *
 # Import city views here
 from api.v1.views.cities import *
 # Import place views here
