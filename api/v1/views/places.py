@@ -11,7 +11,7 @@ from models.user import User
 from models import storage
 
 
-@app_views.route('/cities/<string:city_id>/places', methods=['GET', 'POST'])
+@app_views.route('/cities/<city_id>/places', methods=['GET', 'POST'])
 def get_city_place(city_id=None):
     """Retrieve place data of a city"""
     new_dict = []
@@ -48,7 +48,7 @@ def get_city_place(city_id=None):
             return jsonify(new_dict), 201
 
 
-@app_views.route('/places/<string:place_id>/',
+@app_views.route('/places/<place_id>',
                  methods=['GET', 'DELETE', 'PUT'])
 def get_places(place_id=None):
     """Get a list of place dictionary """
