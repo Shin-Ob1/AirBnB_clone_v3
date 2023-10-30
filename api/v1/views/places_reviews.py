@@ -55,12 +55,12 @@ def create_review(place_id):
         abort(404)
     body = request.get_json(silent=True)
     if body is None:
-        abort(404, description="Not a JSON")
+        abort(400, description="Not a JSON")
     if user_id not in body:
-        abort(404, description="Missing user_id")
+        abort(400, description="Missing user_id")
     text = body.get('text')
     if text is None:
-        abort(404, "Missing text")
+        abort(400, "Missing text")
     user = storage.get(User, body['user_id'])
     if user is None:
         abort(404)
