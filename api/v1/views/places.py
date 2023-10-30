@@ -5,14 +5,15 @@
 
 from api.v1.views import app_views
 from flask import request, abort, jsonify, Flask
+from models import storage
 from models.place import Place
 from models.city import City
 from models.user import User
-from models import storage
 
 
-@app_views.route('/cities/<string:city_id>/places', methods=['GET', 'POST'])
-def get_city_place(city_id=None):
+@app_views.route('/cities/<city_id>/places', methods=['GET', 'POST'],
+                 strict_slashes=False)
+def get_city_place(city_id):
     """Retrieve place data of a city"""
     new_dict = []
 
@@ -30,7 +31,7 @@ def get_city_place(city_id=None):
             data = storage.get(City, city_id)
             if data is None:
                 abort(404)
-            request_data = request.get_json()
+            request_data = request.get_json(silent=True)
             if request_data is None:
                 return 'Not a JSON', 400
             if 'user_id' not in request_data:
@@ -48,9 +49,9 @@ def get_city_place(city_id=None):
             return jsonify(new_dict), 201
 
 
-@app_views.route('/places/<string:place_id>/',
-                 methods=['GET', 'DELETE', 'PUT'])
-def get_places(place_id=None):
+@app_views.route('/places/<place_id>',
+                 methods=['GET', 'DELETE', 'PUT'], strict_slashes=False)
+def get_places(place_id):
     """Get a list of place dictionary """
     new_dict = []
     if request.method == 'GET':
@@ -75,7 +76,7 @@ def get_places(place_id=None):
         if data is None:
             abort(404)
         else:
-            js = request.get_json()
+            js = request.get_json(silent=True)
             if js is None:
                 return 'Not a JSON', 400
             for key, value in js.items():
