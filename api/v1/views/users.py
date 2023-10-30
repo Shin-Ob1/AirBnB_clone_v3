@@ -64,7 +64,7 @@ def update_user(user_id):
         abort(404)
     body = request.get_json(silent=True)
     if body is None:
-        abort(404, description="Not a JSON")
+        abort(400, description="Not a JSON")
     ignore = ['id', 'email', 'created_at', 'updated_at']
     for key, value in body.items():
         if key not in ignore:
