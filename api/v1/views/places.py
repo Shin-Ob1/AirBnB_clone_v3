@@ -4,14 +4,14 @@
 """
 
 from api.v1.views import app_views
-from flask import request, abort, jsonify, make_response
+from flask import request, abort, jsonify
 from models.place import Place
 from models.city import City
 from models.user import User
 from models import storage
 
 
-@app_views.route('/cities/<city_id>/places/', methods=['GET', 'POST'],
+@app_views.route('/cities/<string:city_id>/places', methods=['GET', 'POST'],
                  strict_slashes=False)
 def get_city_place(city_id=None):
     """Retrieve place data of a city"""
@@ -24,7 +24,7 @@ def get_city_place(city_id=None):
             for obj in data.places:
                 new_dict.append(obj.to_dict())
             return jsonify(new_dict)
-    if request.method == 'POST':
+    elif request.method == 'POST':
         if city_id is not None:
             data = storage.get(City, city_id)
             if data is None:
@@ -47,7 +47,7 @@ def get_city_place(city_id=None):
             return jsonify(new_dict), 201
 
 
-@app_views.route('/places/<place_id>/', methods=['GET', 'DELETE', 'PUT'],
+@app_views.route('/places/<string:place_id>', methods=['GET', 'DELETE', 'PUT'],
                  strict_slashes=False)
 def get_places(place_id=None):
     """Get a list of place dictionary """

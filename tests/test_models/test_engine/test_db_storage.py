@@ -3,19 +3,19 @@
 Contains the TestDBStorageDocs and TestDBStorage classes
 """
 
+import os
 from datetime import datetime
 import inspect
 import models
-from models.engine import db_storage
 from models.amenity import Amenity
-from models.base_model import BaseModel
+from models.base_model import BaseModel, Base
+from models.engine import db_storage
 from models.city import City
 from models.place import Place
 from models.review import Review
 from models.state import State
 from models.user import User
 import json
-import os
 import pep8
 import unittest
 DBStorage = db_storage.DBStorage
@@ -68,8 +68,40 @@ test_db_storage.py'])
                             "{:s} method needs a docstring".format(func[0]))
 
 
-class TestFileStorage(unittest.TestCase):
+@unittest.skipIf(models.storage_t != 'db', "not testing db storage")
+class TestDBStorage(unittest.TestCase):
     """Test the FileStorage class"""
+    @unittest.skipIf(models.storage_t != 'db', "not testing db storage")
+    @classmethod
+    def setUpClass(cls):
+        """This will prepare the database to test db storage methods"""
+        from models import storage
+        cls.storage = storage
+
+    @unittest.skipIf(models.storage_t != 'db', "not testing db storage")
+    @classmethod
+    def tearDownClass(cls):
+        """remove test components after running this test"""
+        cls.storage.close()
+
+    @unittest.skipIf(models.storage_t != 'db', "not testing db storage")
+    def setUp(self):
+        """setup a database"""
+        self.user1 = User(email='1chinonso@gmail.com', password='password')
+        self.user2 = User(email='4chinonso@gmail.com', password='5password')
+        self.user3 = User(email='3chinonso@gmail.com', password='6password')
+        self.storage.new(self.user1)
+        self.storage.new(self.user2)
+        self.storage.new(self.user3)
+        self.storage.save()
+
+    @unittest.skipIf(models.storage_t != 'db', "not testing db storage")
+    def tearDown(self):
+        """This will remove all changes created for testing purposes"""
+        self.storage.delete(self.user1)
+        self.storage.delete(self.user2)
+        self.storage.delete(self.user3)
+
     @unittest.skipIf(models.storage_t != 'db', "not testing db storage")
     def test_all_returns_dict(self):
         """Test that all returns a dictionaty"""
@@ -90,7 +122,13 @@ class TestFileStorage(unittest.TestCase):
     @unittest.skipIf(models.storage_t != 'db', "not testing db storage now")
     def test_get(self):
         """Test that get properly get the object base on id and class object"""
+        self.assertIsNotNone(self.storage.get(User, self.user1.id))
+        self.assertIsNotNone(self.storage.get(User, self.user2.id))
+        self.assertIsNotNone(self.storage.get(User, self.user3.id))
 
     @unittest.skipIf(models.storage_t != 'db', "not testing db storage now")
     def test_count(self):
         """This will confirm if count method of storage counts correctly"""
+        self.assertEqual(3, self.storage.count(User))
+        self.assertEqual(0, self.storage.count(State))
+        self.assertEqual(3, self.storage.count())
