@@ -4,7 +4,7 @@
 """
 
 from api.v1.views import app_views
-from flask import request, abort, jsonify
+from flask import request, abort, jsonify, Flask
 from models.place import Place
 from models.city import City
 from models.user import User
@@ -16,6 +16,7 @@ from models import storage
 def get_city_place(city_id=None):
     """Retrieve place data of a city"""
     new_dict = []
+
     if request.method == 'GET':
         if city_id is not None:
             data = storage.get(City, city_id)
@@ -24,6 +25,7 @@ def get_city_place(city_id=None):
             for obj in data.places:
                 new_dict.append(obj.to_dict())
             return jsonify(new_dict)
+
     elif request.method == 'POST':
         if city_id is not None:
             data = storage.get(City, city_id)
@@ -39,11 +41,11 @@ def get_city_place(city_id=None):
                 abort(404)
             if 'name' not in request_data:
                 return 'Missing name', 400
+            request_data['city_id'] = city_id
             d_place = Place(**request_data)
-            d_place.city_id = city_id
+            new_dict = d_place.to_dict()
             storage.new(d_place)
             storage.save()
-            new_dict = d_place.to_dict()
             return jsonify(new_dict), 201
 
 
@@ -59,6 +61,7 @@ def get_places(place_id=None):
                 abort(404)
             new_dict = data.to_dict()
         return jsonify(new_dict)
+
     elif request.method == 'DELETE' and place_id is not None:
         data = storage.get(Place, place_id)
         if data is None:
@@ -67,6 +70,7 @@ def get_places(place_id=None):
             storage.delete(data)
             storage.save()
             return jsonify({}), 200
+
     elif request.method == 'PUT' and place_id is not None:
         data = storage.get(Place, place_id)
         if data is None:
