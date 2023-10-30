@@ -17,4 +17,4 @@ from api.v1.views.cities import *
 # Import place views here
 from api.v1.views.places import *
 # Import review views here
-from api.v1.views.reviews import *
+from api.v1.views.places_reviews import *
