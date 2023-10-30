@@ -76,7 +76,8 @@ def get_places(place_id=None):
             if js is None:
                 return 'Not a JSON', 400
             for key, value in js.items():
-                if key not in ['id', 'created_at', 'updated_at', 'user_id', 'city_id']:
+                if key not in ['id', 'created_at',
+                               'updated_at', 'user_id', 'city_id']:
                     setattr(data, key, value)
             storage.save()
             return jsonify(data.to_dict()), 200
