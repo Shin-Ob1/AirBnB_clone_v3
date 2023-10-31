@@ -125,7 +125,7 @@ def search_places():
     if amenity:
         filtered_place = []
         for place in new_dict:
-            if set(amenity).issubset(set(place.get('amenities', []))):
+            if set(amenity).issubset(set(place['amenities'])):
                 filtered_place.append(place)
         new_dict = filtered_place
     return jsonify(new_dict)
