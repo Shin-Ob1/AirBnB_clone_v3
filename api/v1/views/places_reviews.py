@@ -13,7 +13,6 @@ from models.place import Place
                  strict_slashes=False)
 def get_reviews(place_id):
     """ Retrieves the list of all reviews """
-    reviews = storage.all('Review')
     place = storage.get(Place, place_id)
     if place is None:
         abort(404)
@@ -58,16 +57,17 @@ def create_review(place_id):
         abort(400, description="Not a JSON")
     if user_id not in body:
         abort(400, description="Missing user_id")
-    text = body.get('text')
-    if text is None:
+    if text not in body:
         abort(400, "Missing text")
     user = storage.get(User, body['user_id'])
     if user is None:
         abort(404)
     body['place_id'] = place_id
     rev = Review(**body)
-    rev.save()
-    return jsonify(rev.to_dict()), 201
+    rev_dict = rev.to_dict()
+    storage.new(rev_dict)
+    storage.save()
+    return jsonify(rev_dict), 201
 
 
 @app_views.route('/reviews/<string:review_id>', methods=['PUT'],
