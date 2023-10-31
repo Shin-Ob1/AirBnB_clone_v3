@@ -121,6 +121,11 @@ def search_places():
                     if each_place not in new_dict:
                         new_dict.append(each_place.to_dict())
 
+    if not len(city) and not len(state) and amenity:
+        obj = storage.all(Place).values()
+        for e_obj in obj:
+            new_dict.append(e_obj.to_dict())
+
     if amenity:
         filtered_place = []
         for place in new_dict:
