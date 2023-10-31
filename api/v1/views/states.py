@@ -17,7 +17,7 @@ classes = {"amenities": Amenity, "cities": City,
            "places": Place, "reviews": Review, "states": State, "users": User}
 
 
-@app_views.route('/states/', methods=['GET', 'POST'])
+@app_views.route('/states', methods=['GET', 'POST'])
 @app_views.route('/states/<state_id>', methods=['GET', 'DELETE', 'PUT'])
 def get_all_state(state_id=None):
     """Get a list of state dictionary """
