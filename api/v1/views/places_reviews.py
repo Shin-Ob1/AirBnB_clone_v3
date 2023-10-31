@@ -12,7 +12,7 @@ from models.place import Place
 @app_views.route('/places/<string:place_id>/reviews', methods=['GET'],
                  strict_slashes=False)
 def get_reviews(place_id):
-    """ Retrieves the list of all reviews """    
+    """ Retrieves the list of all reviews """
     place = storage.get(Place, place_id)
     if place is None:
         abort(404)
