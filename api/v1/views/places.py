@@ -113,7 +113,8 @@ def search_places():
                 list_city_in_state = a_state.cities
                 for each_city in a_state.cities:
                     for each_place in each_city.places:
-                        if amenity and each_place.amenities == amenity:
+                        if amenity and len(set(each_place.amenities)
+                                           - set(amenity)) == 0:
                             new_dict.append(each_place.to_dict())
                         elif not amenity:
                             new_dict.append(each_place.to_dict())
@@ -123,7 +124,8 @@ def search_places():
                 a_city = storage.get(City, id_c)
                 if a_city:
                     for each_place in a_city.places:
-                        if amenity and each_place.amenities == amenity:
+                        if amenity and len(set(each_place.amenities)
+                                           - set(amenity)) == 0:
                             new_dict.append(each_place.to_dict())
                         elif not amenity:
                             new_dict.append(each_place.to_dict())
@@ -131,6 +133,6 @@ def search_places():
     if not state and not city and amenity:
         obj = storage.all(Place).values()
         for e_obj in obj:
-            if amenity == e_obj.amenities:
+            if len(set(e_obj.amenities) - set(amenity)) == 0:
                 new_dict.append(e_obj.to_dict())
     return jsonify(new_dict)
