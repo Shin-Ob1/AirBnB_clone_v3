@@ -64,8 +64,10 @@ def create_review(place_id):
         abort(404)
     body['place_id'] = place_id
     rev = Review(**body)
-    rev.save()
-    return jsonify(rev.to_dict()), 201
+    rev_dict = rev.to_dict()
+    storage.new(rev_dict)
+    storage.save()
+    return jsonify(rev_dict), 201
 
 
 @app_views.route('/reviews/<string:review_id>', methods=['PUT'],
