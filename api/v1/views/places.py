@@ -124,7 +124,8 @@ def search_places():
     if amenity:
         filtered_place = []
         for place in new_dict:
-            if all(s_amenity in place['amenities'] for s_amenity in amenity):
+            if all(s_amenity in Place(**place).amenities
+                   for s_amenity in amenity):
                 filtered_place.append(place)
         new_dict = filtered_place
     return jsonify(new_dict)
