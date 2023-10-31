@@ -94,45 +94,38 @@ def search_places():
     data = request.get_json(silent=True)
     if data is None:
         return 'Not a JSON', 400
-    if len(data) == 0 or (len(data['states']) == 0 and
-                          len(data['cities']) and len(data['amenities'])):
 
+    state = data.get('states', [])
+    city = data.get('cities', [])
+    amenity = data.get('amenities', [])
+
+    if not any([state, city, amenity]):
         obj = storage.all(Place).values()
         for e_obj in obj:
             new_dict.append(e_obj.to_dict())
         return jsonify(new_dict)
-    state = data.get('states')
-    city = data.get('cities')
-    amenity = data.get('amenities')
     list_city_in_state = []
 
-    if state and len(state):
+    if state:
         for id_s in state:
             a_state = storage.get(State, id_s)
             if a_state:
-                list_city_in_state = a_state.cities
                 for each_city in a_state.cities:
                     for each_place in each_city.places:
-                        if amenity and len(set(each_place.amenities)
-                                           - set(amenity)) == 0:
+                        if each_place not in new_dict:
                             new_dict.append(each_place.to_dict())
-                        elif not amenity:
-                            new_dict.append(each_place.to_dict())
-    if city and len(city):
+    if city:
         for id_c in city:
-            if id_c not in list_city_in_state:
-                a_city = storage.get(City, id_c)
-                if a_city:
-                    for each_place in a_city.places:
-                        if amenity and len(set(each_place.amenities)
-                                           - set(amenity)) == 0:
-                            new_dict.append(each_place.to_dict())
-                        elif not amenity:
-                            new_dict.append(each_place.to_dict())
+            a_city = storage.get(City, id_c)
+            if a_city and a_city not in new_dict:
+                for each_place in a_city.places:
+                    if each_place not in new_dict:
+                        new_dict.append(each_place.to_dict())
 
-    if not state and not city and amenity:
-        obj = storage.all(Place).values()
-        for e_obj in obj:
-            if len(set(e_obj.amenities) - set(amenity)) == 0:
-                new_dict.append(e_obj.to_dict())
+    if amenity:
+        filtered_place = []
+        for place in new_dict:
+            if set(amenity).issubset(set(place.get('amenities', []))):
+                filtered_place.append(place)
+        new_dict = filtered_place
     return jsonify(new_dict)
