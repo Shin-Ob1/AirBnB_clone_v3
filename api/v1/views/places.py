@@ -104,7 +104,6 @@ def search_places():
         for e_obj in obj:
             new_dict.append(e_obj.to_dict())
         return jsonify(new_dict)
-    list_city_in_state = []
 
     if state:
         for id_s in state:
@@ -125,7 +124,7 @@ def search_places():
     if amenity:
         filtered_place = []
         for place in new_dict:
-            if set(amenity).issubset(set(place['amenities'])):
+            if all(s_amenity in place['amenities'] for s_amenity in amenity):
                 filtered_place.append(place)
         new_dict = filtered_place
     return jsonify(new_dict)
